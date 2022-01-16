@@ -1,5 +1,6 @@
 import { Route } from "wouter";
 
+import ProtectedRoute from "./components/ProtectedRoute";
 import Nav from "./components/Navigation";
 
 import Home from "./pages";
@@ -12,12 +13,12 @@ export default function App() {
       <Route path="/">
         <Home />
       </Route>
-      <Route path="/profile">
+      <ProtectedRoute path="/profile">
         <Profile />
-      </Route>
-      <Route path="/dashboard">
+      </ProtectedRoute>
+      <ProtectedRoute path="/dashboard">
         <Dashboard />
-      </Route>
+      </ProtectedRoute>
     </Nav>
   );
 }

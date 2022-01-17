@@ -11,7 +11,9 @@ export default function Home() {
       {user ? (
         <Heading size="md">Signed In as {user.email}</Heading>
       ) : (
-        <Button colorScheme="blackAlpha" onClick={() => supabase.auth.signIn({ provider: "google" })}>Sign in</Button>
+        <Button colorScheme="blackAlpha" onClick={() => supabase.auth.signIn({ provider: "google" })}>
+          Sign in
+        </Button>
       )}
     </Flex>
   );

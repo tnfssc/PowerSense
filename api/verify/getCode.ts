@@ -10,9 +10,17 @@ const handler: VercelApiHandler = async (req, res) => {
   try {
     await twilioVerify.verifications.create({ to: phoneNumber, channel: "sms" });
     res.status(200).json({ success: true });
-  } catch (error) {
-    if (typeof error === "object" && error.status === 400) {
-      return res.status(400).json({ error });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (
+      error &&
+      typeof error === "object" &&
+      error.status &&
+      typeof error.status === "number" &&
+      error.status >= 400 &&
+      error.status < 500
+    ) {
+      return res.status(error.status).json({ error });
     }
     return res.status(500).json({ error });
   }

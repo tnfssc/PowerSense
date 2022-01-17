@@ -51,6 +51,7 @@ export default function Profile() {
   return (
     <Flex flexDir="column" alignItems="center" w="full">
       <Heading>Profile Page</Heading>
+      {user?.email?.endsWith("@iith.ac.in") ? <Heading size="md">You belong to IITH</Heading> : <></>}
       <Formik initialValues={profile!} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit} className="form">
@@ -62,7 +63,9 @@ export default function Profile() {
             <InputControl name="rollNumber" label="Roll Number" />
             <InputControl name="phone" label="Phone" />
             <InputControl name="upiId" label="UPI ID" />
-            <SubmitButton w="full" isLoading={mutationLoading}>Submit</SubmitButton>
+            <SubmitButton w="full" isLoading={mutationLoading}>
+              Submit
+            </SubmitButton>
           </Form>
         )}
       </Formik>

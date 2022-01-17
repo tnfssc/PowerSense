@@ -19,7 +19,7 @@ import {
   MenuList,
   useBoolean,
 } from "@chakra-ui/react";
-import { FiHome, FiCompass, FiMenu, FiUser, FiLoader } from "react-icons/fi";
+import { FiHome, FiCompass, FiMenu, FiUser, FiLoader, FiUsers } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { Link as WouterLink } from "wouter";
 
@@ -31,10 +31,12 @@ interface LinkItemProps {
   name: string;
   icon: IconType;
   route: string;
+  protected?: boolean;
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, route: "/" },
-  { name: "Dashboard", icon: FiCompass, route: "/dashboard" },
+  { name: "Dashboard", icon: FiCompass, route: "/dashboard", protected: true },
+  { name: "Profile", icon: FiUsers, route: "/profile", protected: true },
 ];
 
 export default function SidebarWithHeader({ children }: { children: ReactNode }) {
@@ -87,7 +89,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} href={link.route} onClick={onClose}>
+        <NavItem key={link.route} icon={link.icon} href={link.route} protected={link.protected} onClick={onClose}>
           {link.name}
         </NavItem>
       ))}
@@ -100,8 +102,11 @@ interface NavItemProps extends FlexProps {
   children: ReactText;
   href: string;
   onClick?: (..._: never) => void;
+  protected?: boolean;
 }
-const NavItem = ({ icon, children, href, onClick, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, href, onClick, protected: protectedRoute = false, ...rest }: NavItemProps) => {
+  const user = useAuth();
+  if (!user && protectedRoute) return <></>;
   return (
     <Link href={href} style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }} onClick={onClick}>
       <Flex

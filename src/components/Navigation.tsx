@@ -117,7 +117,7 @@ const NavItem = ({ icon, children, href, onClick, ...rest }: NavItemProps) => {
         {icon && (
           <Icon
             mr="4"
-            fontSize="16"
+            fontSize="22"
             _groupHover={{
               color: "white",
             }}
@@ -173,8 +173,8 @@ const MobileNav = ({ onOpen, onClose, ...rest }: MobileProps) => {
       <HStack spacing={{ base: "0", md: "6" }}>
         <Flex alignItems={"center"}>
           <Menu>
-            <MenuButton disabled={isLoading} py={2} transition="all 0.3s" _focus={{ boxShadow: "none" }}>
-              {isLoading ? <FiLoader /> : <FiUser />}
+            <MenuButton disabled={isLoading} py={2} transition="all 0.3s" _focus={{ boxShadow: "none" }} marginRight={2}>
+              {isLoading ? <FiLoader size={24} /> : <FiUser size={24} />}
             </MenuButton>
             <MenuList
               bg={useColorModeValue("white", "gray.900")}

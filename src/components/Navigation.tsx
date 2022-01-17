@@ -19,7 +19,7 @@ import {
   MenuList,
   useBoolean,
 } from "@chakra-ui/react";
-import { FiHome, FiCompass, FiMenu, FiUser, FiLoader, FiUsers } from "react-icons/fi";
+import { FiHome, FiCompass, FiMenu, FiUser, FiLoader, FiUsers, FiPhone } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { Link as WouterLink } from "wouter";
 
@@ -37,6 +37,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, route: "/" },
   { name: "Dashboard", icon: FiCompass, route: "/dashboard", protected: true },
   { name: "Profile", icon: FiUsers, route: "/profile", protected: true },
+  { name: "Verify Phone", icon: FiPhone, route: "/verify-phone", protected: true },
 ];
 
 export default function SidebarWithHeader({ children }: { children: ReactNode }) {

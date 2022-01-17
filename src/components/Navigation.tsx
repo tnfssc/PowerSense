@@ -43,13 +43,14 @@ export default function SidebarWithHeader({ children }: { children: ReactNode })
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
       <Drawer
-        autoFocus={false}
+        autoFocus={false} // eslint-disable-line jsx-a11y/no-autofocus
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size="full">
+        size="full"
+      >
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>
@@ -77,14 +78,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       w={{ base: "full", md: 60 }}
       pos="fixed"
       h="full"
-      {...rest}>
+      {...rest}
+    >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Power Sense
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map(link => (
+      {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon} href={link.route} onClick={onClose}>
           {link.name}
         </NavItem>
@@ -113,7 +115,8 @@ const NavItem = ({ icon, children, href, onClick, ...rest }: NavItemProps) => {
           bg: "cyan.400",
           color: "white",
         }}
-        {...rest}>
+        {...rest}
+      >
         {icon && (
           <Icon
             mr="4"
@@ -134,7 +137,7 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
   onClose: () => void;
 }
-const MobileNav = ({ onOpen, onClose, ...rest }: MobileProps) => {
+const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const user = useAuth();
   const [isLoading, setLoading] = useBoolean(false);
   const handleSignOut = async () => {
@@ -157,7 +160,8 @@ const MobileNav = ({ onOpen, onClose, ...rest }: MobileProps) => {
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
       justifyContent={{ base: "space-between", md: "flex-end" }}
-      {...rest}>
+      {...rest}
+    >
       <IconButton
         display={{ base: "flex", md: "none" }}
         onClick={onOpen}
@@ -173,12 +177,19 @@ const MobileNav = ({ onOpen, onClose, ...rest }: MobileProps) => {
       <HStack spacing={{ base: "0", md: "6" }}>
         <Flex alignItems={"center"}>
           <Menu>
-            <MenuButton disabled={isLoading} py={2} transition="all 0.3s" _focus={{ boxShadow: "none" }} marginRight={2}>
+            <MenuButton
+              disabled={isLoading}
+              py={2}
+              transition="all 0.3s"
+              _focus={{ boxShadow: "none" }}
+              marginRight={2}
+            >
               {isLoading ? <FiLoader size={24} /> : <FiUser size={24} />}
             </MenuButton>
             <MenuList
               bg={useColorModeValue("white", "gray.900")}
-              borderColor={useColorModeValue("gray.200", "gray.700")}>
+              borderColor={useColorModeValue("gray.200", "gray.700")}
+            >
               {user ? (
                 <WouterLink to="/profile">
                   <MenuItem>Profile</MenuItem>

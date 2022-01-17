@@ -62,10 +62,10 @@ export default function Profile() {
         }
       })
       .then(() => setLoading.off());
-  }, [user]);
+  }, [setLoading, user]);
 
   const handleSubmit = async (values: Profile) => {
-    const { data, error } = await supabase.from<Profile>("profiles").upsert(values);
+    const { error } = await supabase.from<Profile>("profiles").upsert(values);
     if (error) console.error("error", error);
     else setLocation("/dashboard");
     toast({

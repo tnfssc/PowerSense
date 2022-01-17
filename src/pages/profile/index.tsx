@@ -1,24 +1,10 @@
-import { Flex, Heading, useBoolean, CircularProgress, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Flex, Heading, CircularProgress, useToast } from "@chakra-ui/react";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
-import { useLocation } from "wouter";
 
 import useAuth from "../../use/auth";
-import supabase from "../../lib/supabase";
-
-type Profile = {
-  id: string;
-  displayName: string;
-  designation: string;
-  role: string;
-  organization: string;
-  department: string;
-  rollNumber: string;
-  phone: string;
-  upiId: string;
-};
+import useProfile, { ProfileType } from "../../use/profile";
 
 const validationSchema = yup.object({
   id: yup.string().required("ID is required"),
@@ -35,43 +21,27 @@ const validationSchema = yup.object({
 export default function Profile() {
   const user = useAuth();
   const toast = useToast();
-  const [, setLocation] = useLocation();
-  const [isLoading, setLoading] = useBoolean(false);
-  const [profile, setProfile] = useState<Profile>({
-    id: user?.id as string,
-    displayName: "",
-    designation: "",
-    role: "",
-    organization: "",
-    department: "",
-    rollNumber: "",
-    phone: "",
-    upiId: "",
-  });
-  useEffect(() => {
-    setLoading.on();
-    supabase
-      .from<Profile>("profiles")
-      .select("*")
-      .single()
-      .then(({ error, data }) => {
-        if (error || !data) {
-          console.error("user not found", { error });
-        } else {
-          setProfile(data);
-        }
-      })
-      .then(() => setLoading.off());
-  }, [setLoading, user]);
+  const {
+    profile: { data: profile, isLoading },
+    mutation: { mutate, isLoading: mutationLoading },
+  } = useProfile(user?.id);
 
-  const handleSubmit = async (values: Profile) => {
-    const { error } = await supabase.from<Profile>("profiles").upsert(values);
-    if (error) console.error("error", error);
-    else setLocation("/dashboard");
-    toast({
-      title: "Profile updated",
-      isClosable: true,
-      position: "bottom-left",
+  const handleSubmit = (values: ProfileType) => {
+    mutate(values, {
+      onError: (error) => {
+        toast({
+          status: "error",
+          title: error.message,
+          position: "bottom-left",
+        });
+      },
+      onSuccess: () => {
+        toast({
+          status: "success",
+          title: "Profile updated",
+          position: "bottom-left",
+        });
+      },
     });
   };
 
@@ -79,8 +49,8 @@ export default function Profile() {
   return (
     <Flex flexDir="column">
       <Heading>Profile Page</Heading>
-      <Formik initialValues={profile} validationSchema={validationSchema} onSubmit={handleSubmit}>
-        {({ handleSubmit, isSubmitting }) => (
+      <Formik initialValues={profile as ProfileType} validationSchema={validationSchema} onSubmit={handleSubmit}>
+        {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <InputControl name="displayName" label="Name" />
             <InputControl name="designation" label="Designation" />
@@ -90,7 +60,7 @@ export default function Profile() {
             <InputControl name="rollNumber" label="Roll Number" />
             <InputControl name="phone" label="Phone" />
             <InputControl name="upiId" label="UPI ID" />
-            <SubmitButton isLoading={isSubmitting}>Submit</SubmitButton>
+            <SubmitButton isLoading={mutationLoading}>Submit</SubmitButton>
           </Form>
         )}
       </Formik>

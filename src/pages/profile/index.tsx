@@ -49,7 +49,7 @@ export default function Profile() {
   return (
     <Flex flexDir="column">
       <Heading>Profile Page</Heading>
-      <Formik initialValues={profile as ProfileType} validationSchema={validationSchema} onSubmit={handleSubmit}>
+      <Formik initialValues={profile!} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <InputControl name="displayName" label="Name" />

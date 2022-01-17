@@ -39,7 +39,7 @@ const useProfile = (id?: string) => {
     async (profile) => {
       const { data, error } = await supabase.from<ProfileType>("profiles").upsert(profile).single();
       if (error) throw error;
-      return data as ProfileType;
+      return data!;
     },
     {
       onSuccess: () => queryClient.invalidateQueries<ProfileType>("profile"),

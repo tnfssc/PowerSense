@@ -10,7 +10,7 @@ type Phones = {
 
 const handler: VercelApiHandler = async (req, res) => {
   const { user, error } = await supabase.auth.api.getUserByCookie(req);
-  if (error || !user) return res.status(401).json({ error: error.message });
+  if (error || !user) return res.status(401).json({ error });
   const code = req.body.code as string;
   const phoneNumber = req.body.phoneNumber as string;
   try {

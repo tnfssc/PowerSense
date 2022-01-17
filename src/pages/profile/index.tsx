@@ -6,6 +6,8 @@ import { InputControl, SubmitButton } from "formik-chakra-ui";
 import useAuth from "../../use/auth";
 import useProfile, { ProfileType } from "../../use/profile";
 
+import "./index.css";
+
 const validationSchema = yup.object({
   id: yup.string().required("ID is required"),
   displayName: yup.string().required("Display name is required"),
@@ -47,11 +49,11 @@ export default function Profile() {
 
   if (isLoading) return <CircularProgress isIndeterminate />;
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" alignItems="center" w="full">
       <Heading>Profile Page</Heading>
       <Formik initialValues={profile!} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ handleSubmit }) => (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className="form">
             <InputControl name="displayName" label="Name" />
             <InputControl name="designation" label="Designation" />
             <InputControl name="role" label="Role" />
@@ -60,7 +62,7 @@ export default function Profile() {
             <InputControl name="rollNumber" label="Roll Number" />
             <InputControl name="phone" label="Phone" />
             <InputControl name="upiId" label="UPI ID" />
-            <SubmitButton isLoading={mutationLoading}>Submit</SubmitButton>
+            <SubmitButton w="full" isLoading={mutationLoading}>Submit</SubmitButton>
           </Form>
         )}
       </Formik>

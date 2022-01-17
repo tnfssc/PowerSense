@@ -8,17 +8,14 @@ export default function Dashboard() {
   const user = useAuth()!;
   const { profile } = useProfile();
   return (
-    <Flex flexDir="column">
-      <Heading size="md">You are currently at Dashboard Page</Heading>
+    <Flex flexDir="column" w="100%" alignItems="center">
+      <Heading>Dashboard Page</Heading>
       {profile.isLoading ? (
         <CircularProgress isIndeterminate />
       ) : (
-        <>
-          <Heading>{profile.error ? user.email : profile.data?.displayName}</Heading>
-          <Heading>
-            <Link to="/profile">Click here to go to Profile Page</Link>
-          </Heading>
-        </>
+        <Heading size="md">
+          Signed in as <Link to="/profile">{profile.error ? user.email : profile.data?.displayName}</Link>
+        </Heading>
       )}
     </Flex>
   );

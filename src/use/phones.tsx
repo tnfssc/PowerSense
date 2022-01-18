@@ -16,7 +16,7 @@ const usePhones = (id?: string) => {
       if (error) throw error;
       return data ?? { id: id ?? "", phone: "" };
     },
-    { retry: false },
+    { retry: false, refetchOnWindowFocus: false },
   );
   const queryClient = useQueryClient();
   const invalidate = () => queryClient.invalidateQueries("phones");

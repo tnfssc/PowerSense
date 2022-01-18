@@ -1,12 +1,16 @@
-import { Flex, Heading, CircularProgress } from "@chakra-ui/react";
+import { Flex, Heading, CircularProgress, Box } from "@chakra-ui/react";
+
+import Link from "../../components/Link";
+import CoursesTable from "./courses/table";
 
 import useAuth from "../../use/auth";
 import useProfile from "../../use/profile";
-import Link from "../../components/Link";
+import useCourses from "../../use/courses";
 
 export default function Dashboard() {
   const user = useAuth()!;
-  const { profile } = useProfile();
+  const { profile } = useProfile(user.id);
+  const courses = useCourses();
   return (
     <Flex flexDir="column" w="100%" alignItems="center">
       <Heading>Dashboard Page</Heading>
@@ -16,6 +20,14 @@ export default function Dashboard() {
         <Heading size="md">
           Signed in as <Link to="/profile">{profile.error ? user.email : profile.data?.displayName}</Link>
         </Heading>
+      )}
+      <Box h="10" />
+      {courses.isLoading ? (
+        <CircularProgress isIndeterminate />
+      ) : courses.error ? (
+        <Heading size="md">Error occured</Heading>
+      ) : (
+        <CoursesTable courses={courses.data ?? []} />
       )}
     </Flex>
   );

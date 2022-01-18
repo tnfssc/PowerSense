@@ -18,6 +18,7 @@ import {
   MenuItem,
   MenuList,
   useBoolean,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FiHome, FiCompass, FiMenu, FiUser, FiLoader, FiUsers, FiPhone } from "react-icons/fi";
 import { IconType } from "react-icons";
@@ -145,6 +146,7 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const user = useAuth();
+  const { toggleColorMode } = useColorMode();
   const [isLoading, setLoading] = useBoolean(false);
   const handleSignOut = async () => {
     setLoading.on();
@@ -196,6 +198,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
+              <MenuItem onClick={toggleColorMode}>Toggle theme</MenuItem>
               {user ? (
                 <WouterLink to="/profile">
                   <MenuItem>Profile</MenuItem>

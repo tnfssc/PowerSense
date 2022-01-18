@@ -17,23 +17,29 @@ export type ProfileType = {
 };
 
 const useProfile = (id?: string) => {
-  const profile = useQuery<ProfileType, PostgrestError>("profile", async () => {
-    const { data, error } = await supabase.from<ProfileType>("profiles").select("*").single();
-    if (error && error.details !== ERRORS.SINGLE_ROW_NOT_FOUND.details) throw error;
-    return (
-      data ?? {
-        id: id ?? "",
-        displayName: "",
-        designation: "",
-        role: "",
-        organization: "",
-        department: "",
-        rollNumber: "",
-        phone: "",
-        upiId: "",
-      }
-    );
-  });
+  const profile = useQuery<ProfileType, PostgrestError>(
+    "profile",
+    async () => {
+      const { data, error } = await supabase.from<ProfileType>("profiles").select("*").single();
+      if (error && error.details !== ERRORS.SINGLE_ROW_NOT_FOUND.details) throw error;
+      return (
+        data ?? {
+          id: id ?? "",
+          displayName: "",
+          designation: "",
+          role: "",
+          organization: "",
+          department: "",
+          rollNumber: "",
+          phone: "",
+          upiId: "",
+        }
+      );
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
   const queryClient = useQueryClient();
   const mutation = useMutation<ProfileType, PostgrestError, ProfileType>(
     async (profile) => {

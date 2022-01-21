@@ -1,4 +1,4 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Button, useToast } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, Button, useToast, Box } from "@chakra-ui/react";
 import { useMemo, useCallback } from "react";
 import { Column, useTable } from "react-table";
 
@@ -44,33 +44,35 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
   );
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data: courses });
   return (
-    <Table {...getTableProps()}>
-      <Thead>
-        {headerGroups.map((headerGroup) => (
-          // eslint-disable-next-line react/jsx-key
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              // eslint-disable-next-line react/jsx-key
-              <Th {...column.getHeaderProps()}>{column.render("Header")}</Th>
-            ))}
-          </Tr>
-        ))}
-      </Thead>
-      <Tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
+    <Box style={{ overflow: "auto", maxWidth: "100vw" }}>
+      <Table {...getTableProps()}>
+        <Thead>
+          {headerGroups.map((headerGroup) => (
             // eslint-disable-next-line react/jsx-key
-            <Tr {...row.getRowProps()} _hover={{ bgColor: "rgba(255, 255, 255, 5)", color: "black" }}>
-              {row.cells.map((cell) => (
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
                 // eslint-disable-next-line react/jsx-key
-                <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                <Th {...column.getHeaderProps()}>{column.render("Header")}</Th>
               ))}
             </Tr>
-          );
-        })}
-      </Tbody>
-    </Table>
+          ))}
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <Tr {...row.getRowProps()} _hover={{ bgColor: "rgba(255, 255, 255, 5)", color: "black" }}>
+                {row.cells.map((cell) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                ))}
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
+    </Box>
   );
 };
 

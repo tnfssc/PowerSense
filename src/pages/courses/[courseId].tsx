@@ -5,8 +5,25 @@ import { useCourse } from "../../use/courses";
 import ERRORS from "../../constants/errors";
 
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
-  const { course } = useCourse(courseId);
+  const { course, register } = useCourse(courseId);
   const toast = useToast();
+  const handleRegister = async () => {
+    try {
+      await register.mutateAsync();
+      toast({
+        title: "Success",
+        description: "You have successfully registered for this course.",
+        status: "success",
+        position: "bottom-left",
+      });
+    } catch (error) {
+      toast({
+        title: "Couldn't register",
+        status: "error",
+        position: "bottom-left",
+      });
+    }
+  };
   return (
     <Box>
       <Heading>Course Info</Heading>
@@ -24,11 +41,7 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
           <Heading size="lg">{course.data!.name}</Heading>
           <Heading size="md">{course.data!.description}</Heading>
           <Box h="4" />
-          <Button
-            w="full"
-            onClick={() => toast({ position: "bottom-left", title: "Coming Soon", status: "info" })}
-            disabled={course.data!.registered}
-          >
+          <Button w="full" onClick={handleRegister} disabled={course.data!.registered} isLoading={register.isLoading}>
             {course.data!.registered ? "Already registered" : "Register"}
           </Button>
         </Box>

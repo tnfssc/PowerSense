@@ -37,9 +37,17 @@ export const useCourse = (id: number) => {
   const queryClient = useQueryClient();
   const mutation = useMutation<CoursesType, PostgrestError>(
     async () => {
+      const { status } = await fetch("/api/courses/register", {
+        method: "POST",
+        headers: new Headers({ "Content-Type": "application/json" }),
+        credentials: "same-origin",
+        body: JSON.stringify({ course_id: id }),
+      });
+      if (status !== 200) throw new Error("Failed to register course");
       const registered = await supabase
         .from<CourseRegistrationsType>("course-registrations")
-        .upsert({ course_id: id })
+        .select()
+        .eq("course_id", id)
         .single();
       const { data, error } = await supabase.from<CoursesType>("courses").select("*").eq("id", id).single();
       if (error || (registered.error && registered.error.details !== ERRORS.SINGLE_ROW_NOT_FOUND.details))

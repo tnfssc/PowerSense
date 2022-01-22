@@ -1,13 +1,23 @@
 import { Heading, Box, CircularProgress, Button, useToast } from "@chakra-ui/react";
-import { Redirect } from "wouter";
+import { Redirect, useLocation } from "wouter";
 
 import { useCourse } from "../../use/courses";
+import usePhones from "../../use/phones";
 import ERRORS from "../../constants/errors";
 
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
   const { course, register } = useCourse(courseId);
   const toast = useToast();
+  const { phone } = usePhones();
+  const [, setLocation] = useLocation();
   const handleRegister = async () => {
+    if (!phone.data?.phone) {
+      setLocation("/verify-phone");
+      toast({
+        title: "Please verify your phone number first",
+        status: "error",
+      });
+    }
     try {
       await register.mutateAsync();
       toast({

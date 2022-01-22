@@ -153,11 +153,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     await supabase.auth.signOut();
     setLoading.off();
   };
-  const handleSignIn = async () => {
-    setLoading.on();
-    supabase.auth.signIn({ provider: "google" });
-    setLoading.off();
-  };
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -207,7 +202,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               {user ? (
                 <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
               ) : (
-                <MenuItem onClick={handleSignIn}>Sign in</MenuItem>
+                <Link to="/login">
+                  <MenuItem>Sign in</MenuItem>
+                </Link>
               )}
             </MenuList>
           </Menu>

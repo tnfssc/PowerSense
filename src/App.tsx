@@ -8,12 +8,16 @@ import Profile from "./pages/profile";
 import Dashboard from "./pages/dashboard";
 import CourseInfo from "./pages/courses/[courseId]";
 import VerifyPhone from "./pages/verify-phone";
+import LoginPage from "./pages/login";
 
 export default function App() {
   return (
     <Nav>
       <Route path="/">
         <Home />
+      </Route>
+      <Route path="/login">
+        <LoginPage />
       </Route>
       <ProtectedRoute path="/profile">
         <Profile />

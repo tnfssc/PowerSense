@@ -16,7 +16,6 @@ const validationSchema = yup.object({
   organization: yup.string(),
   department: yup.string(),
   rollNumber: yup.string(),
-  phone: yup.string(),
   upiId: yup.string(),
 });
 
@@ -61,7 +60,6 @@ export default function Profile() {
             <InputControl name="organization" label="Organization" />
             <InputControl name="department" label="Department" />
             <InputControl name="rollNumber" label="Roll Number" />
-            <InputControl name="phone" label="Phone" />
             <InputControl name="upiId" label="UPI ID" />
             <SubmitButton w="full" isLoading={mutationLoading}>
               Submit

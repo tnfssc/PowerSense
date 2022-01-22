@@ -12,7 +12,6 @@ export type ProfileType = {
   organization: string;
   department: string;
   rollNumber: string;
-  phone: string;
   upiId: string;
 };
 

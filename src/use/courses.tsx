@@ -9,6 +9,7 @@ export type CoursesType = {
   name: string;
   description: string;
   question_paper: string | null;
+  payment_link: string | null;
 };
 
 export type CourseRegistrationsType = { user_id: string; course_id: number };
@@ -62,7 +63,7 @@ export const useCourse = (id: number) => {
   return { course, register: mutation };
 };
 
-export type CoursesList = Omit<Omit<CoursesType, "description">, "question_paper"> & { registered: boolean };
+export type CoursesList = Omit<Omit<Omit<CoursesType, "description">, "question_paper">, "payment_link"> & { registered: boolean };
 
 const useCourses = (all = false) => {
   const courses = useQuery<Array<CoursesList>, PostgrestError>(

@@ -1,11 +1,21 @@
 import { Heading, Box, CircularProgress, Button, useToast } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
+import { useEffect } from "react";
 
 import { useCourse } from "../../use/courses";
 import usePhones from "../../use/phones";
 import ERRORS from "../../constants/errors";
 
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
+  useEffect(() => {
+    fetch(`/api/courses/is-registered`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ course_id: courseId }),
+    });
+  }, [courseId]);
   const { course, register } = useCourse(courseId);
   const toast = useToast();
   const { phone } = usePhones();
@@ -36,6 +46,7 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
   };
 
   const handleDownloadQuestionPaper = async () => {
+    window.open(course.data!.payment_link!, "_blank", "noopener noreferrer");
     return toast({
       title: "Coming soon",
       status: "info",
@@ -65,7 +76,12 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
               Register
             </Button>
           ) : (
-            <Button w="full" onClick={handleDownloadQuestionPaper} isLoading={register.isLoading}>
+            <Button
+              disabled={!course.data!.payment_link}
+              w="full"
+              onClick={handleDownloadQuestionPaper}
+              isLoading={register.isLoading}
+            >
               Download Question Paper
             </Button>
           )}

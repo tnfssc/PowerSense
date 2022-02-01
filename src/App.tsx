@@ -9,6 +9,8 @@ import Dashboard from "./pages/dashboard";
 import CourseInfo from "./pages/courses/[courseId]";
 import VerifyPhone from "./pages/verify-phone";
 import LoginPage from "./pages/login";
+import ForgotPasswordPage from "./pages/login/forgot-password";
+import ResetPasswordPage from "./pages/login/reset-password";
 
 export default function App() {
   return (
@@ -19,6 +21,12 @@ export default function App() {
       <Route path="/login">
         <LoginPage />
       </Route>
+      <Route path="/login/forgot-password">
+        <ForgotPasswordPage />
+      </Route>
+      <ProtectedRoute path="/login/reset-password">
+        <ResetPasswordPage />
+      </ProtectedRoute>
       <ProtectedRoute path="/profile">
         <Profile />
       </ProtectedRoute>

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Flex, Heading, Button, Input, useToast, useBoolean } from "@chakra-ui/react";
+import { Flex, Heading, Button, Input, useToast, useBoolean, ButtonGroup } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
 
+import Link from "../../components/Link";
 import supabase from "../../lib/supabase";
 import useAuth from "../../use/auth";
 
@@ -27,6 +28,26 @@ export default function LoginPage() {
     supabase.auth.signIn({ provider: "google" });
   };
 
+  const handleSignUpWithEmail = async () => {
+    try {
+      setLoading.on();
+      await supabase.auth.signUp({ email, password });
+      setLoading.off();
+      setLocation("/");
+      return toast({
+        title: "Confirmation Email Sent",
+        description: "Please confirm your email to login.",
+        status: "success",
+      });
+    } catch (error) {
+      setLoading.off();
+      return toast({
+        title: "Some error occurred",
+        status: "error",
+      });
+    }
+  };
+
   const handleSignInWithEmail = async () => {
     if (!validateEmail(email)) {
       return toast({
@@ -45,14 +66,9 @@ export default function LoginPage() {
       const res = await supabase.auth.signIn({ email, password });
       setLoading.off();
       if (!res.user && res.error?.message === "Invalid login credentials") {
-        setLoading.on();
-        await supabase.auth.signUp({ email, password });
-        setLoading.off();
-        setLocation("/");
         return toast({
-          title: "Confirmation Email Sent",
-          description: "Please confirm your email to login. Please use the latest email only.",
-          status: "success",
+          title: "Invalid login credentials",
+          status: "error",
         });
       }
       if (!res.user && res.error?.message === "Email not confirmed") {
@@ -90,9 +106,19 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           mt="4"
         />
-        <Button w="full" onClick={handleSignInWithEmail} mt="4" isLoading={loading}>
-          Login
-        </Button>
+        <Flex justifyContent="flex-end" pt="3">
+          <Link href="/login/forgot-password" style={{ color: "blue" }}>
+            Forgot Password?
+          </Link>
+        </Flex>
+        <ButtonGroup>
+          <Button w="full" onClick={handleSignInWithEmail} mt="4" isLoading={loading}>
+            Login
+          </Button>
+          <Button w="full" onClick={handleSignUpWithEmail} mt="4" isLoading={loading}>
+            Sign up
+          </Button>
+        </ButtonGroup>
         <Flex w="full" justifyContent="center" padding="5">
           <Flex>or</Flex>
         </Flex>

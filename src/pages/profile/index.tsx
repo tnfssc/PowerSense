@@ -54,9 +54,14 @@ export default function Profile() {
     <Flex flexDir="column" alignItems="center" w="full">
       <Heading>Profile Page</Heading>
       {user?.email?.endsWith("@iith.ac.in") ? <Heading size="md">You belong to IITH</Heading> : <></>}
-      <Flex w="full" justifyContent="flex-end">
+      <Flex w="full" justifyContent="flex-end" mt="6">
         <Link href="/verify-phone">
-          <Button isLoading={phone.isLoading}>{phone.data?.phone ?? "Link phone"}</Button>
+          <Button isLoading={phone.isLoading} mr="2">
+            {phone.data?.phone ?? "Link phone"}
+          </Button>
+        </Link>
+        <Link href="/login/reset-password">
+          <Button>Reset Password</Button>
         </Link>
       </Flex>
       <Formik initialValues={profile!} validationSchema={validationSchema} onSubmit={handleSubmit}>
@@ -69,9 +74,9 @@ export default function Profile() {
             <InputControl name="department" label="Department" />
             <InputControl name="rollNumber" label="Roll Number" />
             {/* <InputControl name="upiId" label="UPI ID" /> */}
-            <SubmitButton w="full" isLoading={mutationLoading}>
-              Submit
-            </SubmitButton>
+            <Flex w="full" justifyContent="center">
+              <SubmitButton isLoading={mutationLoading}>Submit</SubmitButton>
+            </Flex>
           </Form>
         )}
       </Formik>

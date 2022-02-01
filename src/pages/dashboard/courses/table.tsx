@@ -1,23 +1,11 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Button, useToast, Box } from "@chakra-ui/react";
-import { useMemo, useCallback } from "react";
+import { Table, Thead, Tbody, Tr, Th, Td, Button, Box } from "@chakra-ui/react";
+import { useMemo } from "react";
 import { Column, useTable } from "react-table";
 
 import { CoursesList } from "../../../use/courses";
 import Link from "../../../components/Link";
 
 const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) => {
-  const toast = useToast();
-  const downloadQuestion = useCallback(
-    (courseId: number) => {
-      toast({
-        title: "Coming soon",
-        description: `The question paper for course ID: ${courseId} is not yet available.`,
-        status: "info",
-        position: "bottom-left",
-      });
-    },
-    [toast],
-  );
   const columns = useMemo<Column<CoursesList>[]>(
     () => [
       {
@@ -26,21 +14,29 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
         Cell: ({ row }) => <Link href={`/courses/${row.original.id}`}>{row.original.name}</Link>,
       },
       {
-        Header: "Registration status",
+        Header: "Status",
         accessor: "registered",
         Cell: ({ cell: { value } }) => (value ? "Registered" : "Not registered"),
       },
       {
+        Header: "Referral",
+        Cell: "45-62-66-77 (active)",
+      },
+      {
+        Header: "Deadline",
+        Cell: "N/A",
+      },
+      {
         Header: "Question Paper",
         accessor: "id",
-        Cell: ({ cell: { value }, row }) => (
-          <Button disabled={!row.original.registered} onClick={() => downloadQuestion(value)}>
-            Download
-          </Button>
+        Cell: ({ row }) => (
+          <Link href={`/courses/${row.original.id}`}>
+            <Button disabled={!row.original.registered}>{row.original.registered ? "Download" : "Register"}</Button>
+          </Link>
         ),
       },
     ],
-    [downloadQuestion],
+    [],
   );
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data: courses });
   return (

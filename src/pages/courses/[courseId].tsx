@@ -34,6 +34,15 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
       });
     }
   };
+
+  const handleDownloadQuestionPaper = async () => {
+    return toast({
+      title: "Coming soon",
+      status: "info",
+      position: "bottom-left",
+    });
+  };
+
   return (
     <Box>
       <Heading>Course Info</Heading>
@@ -51,9 +60,15 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
           <Heading size="lg">{course.data!.name}</Heading>
           <Heading size="md">{course.data!.description}</Heading>
           <Box h="4" />
-          <Button w="full" onClick={handleRegister} disabled={course.data!.registered} isLoading={register.isLoading}>
-            {course.data!.registered ? "Already registered" : "Register"}
-          </Button>
+          {!course.data!.registered ? (
+            <Button w="full" onClick={handleRegister} isLoading={register.isLoading}>
+              Register
+            </Button>
+          ) : (
+            <Button w="full" onClick={handleDownloadQuestionPaper} isLoading={register.isLoading}>
+              Download Question Paper
+            </Button>
+          )}
         </Box>
       )}
     </Box>

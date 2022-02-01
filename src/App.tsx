@@ -7,6 +7,7 @@ import Home from "./pages";
 import Profile from "./pages/profile";
 import Dashboard from "./pages/dashboard";
 import CourseInfo from "./pages/courses/[courseId]";
+import AllCourses from "./pages/courses";
 import VerifyPhone from "./pages/verify-phone";
 import LoginPage from "./pages/login";
 import ForgotPasswordPage from "./pages/login/forgot-password";
@@ -32,6 +33,9 @@ export default function App() {
       </ProtectedRoute>
       <ProtectedRoute path="/dashboard">
         <Dashboard />
+      </ProtectedRoute>
+      <ProtectedRoute path="/courses">
+        <AllCourses />
       </ProtectedRoute>
       <ProtectedRoute path="/courses/:courseId">
         {({ courseId }) => {

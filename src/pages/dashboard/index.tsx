@@ -1,4 +1,4 @@
-import { Flex, Heading, CircularProgress, Box } from "@chakra-ui/react";
+import { Flex, Heading, CircularProgress, Box, Button } from "@chakra-ui/react";
 
 import Link from "../../components/Link";
 import CoursesTable from "./courses/table";
@@ -27,7 +27,14 @@ export default function Dashboard() {
       ) : courses.error ? (
         <Heading size="md">Error occured</Heading>
       ) : (
-        <CoursesTable courses={courses.data ?? []} />
+        <>
+          <CoursesTable courses={courses.data ?? []} />
+          <Flex mt="4">
+            <Link href="/courses">
+              <Button>View all courses</Button>
+            </Link>
+          </Flex>
+        </>
       )}
     </Flex>
   );

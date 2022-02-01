@@ -13,21 +13,21 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
   const handleRegister = async () => {
     if (!phone.data?.phone) {
       setLocation("/verify-phone");
-      toast({
+      return toast({
         title: "Please verify your phone number first",
         status: "error",
       });
     }
     try {
       await register.mutateAsync();
-      toast({
+      return toast({
         title: "Success",
         description: "You have successfully registered for this course.",
         status: "success",
         position: "bottom-left",
       });
     } catch (error) {
-      toast({
+      return toast({
         title: "Couldn't register",
         status: "error",
         position: "bottom-left",

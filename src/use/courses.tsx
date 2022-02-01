@@ -64,7 +64,7 @@ export const useCourse = (id: number) => {
 
 export type CoursesList = Omit<Omit<CoursesType, "description">, "question_paper"> & { registered: boolean };
 
-const useCourses = () => {
+const useCourses = (all = false) => {
   const courses = useQuery<Array<CoursesList>, PostgrestError>(
     "courses",
     async () => {
@@ -77,7 +77,8 @@ const useCourses = () => {
         ...course,
         registered: registered.data!.some((reg) => reg.course_id === course.id),
       }));
-      return result;
+      if (all) return result;
+      return result.filter((course) => course.registered);
     },
     {
       refetchOnWindowFocus: false,

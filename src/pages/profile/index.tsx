@@ -68,7 +68,7 @@ export default function Profile() {
             <InputControl name="organization" label="Organization" />
             <InputControl name="department" label="Department" />
             <InputControl name="rollNumber" label="Roll Number" />
-            <InputControl name="upiId" label="UPI ID" />
+            {/* <InputControl name="upiId" label="UPI ID" /> */}
             <SubmitButton w="full" isLoading={mutationLoading}>
               Submit
             </SubmitButton>

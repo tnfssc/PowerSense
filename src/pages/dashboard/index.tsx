@@ -18,7 +18,7 @@ export default function Dashboard() {
         <CircularProgress isIndeterminate />
       ) : (
         <Heading size="md">
-          Signed in as <Link to="/profile">{profile.error ? user.email : profile.data?.displayName}</Link>
+          Signed in as <Link href="/profile">{profile.error ? user.email : profile.data?.displayName}</Link>
         </Heading>
       )}
       <Box h="10" />

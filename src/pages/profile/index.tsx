@@ -55,7 +55,7 @@ export default function Profile() {
       <Heading>Profile Page</Heading>
       {user?.email?.endsWith("@iith.ac.in") ? <Heading size="md">You belong to IITH</Heading> : <></>}
       <Flex w="full" justifyContent="flex-end">
-        <Link to="/verify-phone">
+        <Link href="/verify-phone">
           <Button isLoading={phone.isLoading}>{phone.data?.phone ?? "Link phone"}</Button>
         </Link>
       </Flex>

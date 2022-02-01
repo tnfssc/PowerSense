@@ -12,7 +12,7 @@ export default function Home() {
         {user ? (
           <Heading size="md">Signed In as {user.email}</Heading>
         ) : (
-          <Link to="/login">
+          <Link href="/login">
             <Button>Sign in</Button>
           </Link>
         )}

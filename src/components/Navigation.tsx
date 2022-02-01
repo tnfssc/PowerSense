@@ -201,7 +201,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               {user ? (
                 <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
               ) : (
-                <Link to="/login">
+                <Link href="/login">
                   <MenuItem>Sign in</MenuItem>
                 </Link>
               )}

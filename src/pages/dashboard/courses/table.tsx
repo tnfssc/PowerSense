@@ -23,7 +23,7 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
       {
         Header: "Course name",
         accessor: "name",
-        Cell: ({ row }) => <Link to={`/courses/${row.original.id}`}>{row.original.name}</Link>,
+        Cell: ({ row }) => <Link href={`/courses/${row.original.id}`}>{row.original.name}</Link>,
       },
       {
         Header: "Registration status",

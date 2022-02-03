@@ -9,12 +9,9 @@ const handler: VercelApiHandler = async (req, res) => {
   const { user, error } = await supabase.auth.api.getUserByCookie(req);
   if (error || !user) return res.status(401).json({ error });
   const course_id = req.body.course_id as number;
-  const {
-    data: { name: course_name },
-    error: error2,
-  } = await supabase.from<Courses>("courses").select().eq("id", course_id).single();
+  const { data, error: error2 } = await supabase.from<Courses>("courses").select().eq("id", course_id).single();
+  const course_name = data!.name;
   if (error2) return res.status(500).json({ error: error2 });
-
   try {
     const params: RazorpayPaymentLinkRequest = {
       amount: 100,

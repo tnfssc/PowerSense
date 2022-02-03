@@ -21,8 +21,7 @@ const handler: VercelApiHandler = async (req, res) => {
       currency: "INR",
       description: `${course_name} payment`,
       customer: {
-        email: "gaurav.kumar@example.com",
-        contact: "+919999999999",
+        email: `${user.email}`,
       },
       notify: {
         sms: true,

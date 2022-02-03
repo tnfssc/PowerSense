@@ -3,7 +3,7 @@ import type { VercelApiHandler } from "@vercel/node";
 
 const handler: VercelApiHandler = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log(JSON.stringify(req.body, null, 2));
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });

@@ -123,21 +123,22 @@ export interface PaymentLinkEntity {
 export interface RazorpayPaymentLinkRequest {
   amount: number;
   currency: string;
-  accept_partial: boolean;
-  first_min_partial_amount: number;
+  accept_partial?: boolean;
+  first_min_partial_amount?: number;
   description: string;
   customer: Customer;
   notify: Notify;
-  reminder_enable: boolean;
-  notes: Notes;
-  callback_url: string;
-  callback_method: string;
+  reminder_enable?: boolean;
+  notes?: Notes;
+  callback_url?: string;
+  callback_method?: string;
+  reference_id: string;
 }
 
 export interface Customer {
-  contact: string;
+  contact?: string;
   email: string;
-  name: string;
+  name?: string;
 }
 
 export interface Notes {

@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import Razorpay from "razorpay";
 
-const RAZORPAY_KEYID = process.env.RAZORPAY_KEYID!;
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET!;
+const RAZORPAY_KEYID = process.env.RAZORPAY_KEYID;
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

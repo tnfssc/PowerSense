@@ -6,6 +6,7 @@ import { CoursesList } from "../../../use/courses";
 import Link from "../../../components/Link";
 
 const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) => {
+  console.log(courses);
   const columns = useMemo<Column<CoursesList>[]>(
     () => [
       {
@@ -16,7 +17,11 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
       {
         Header: "Status",
         accessor: "registered",
-        Cell: ({ cell: { value } }) => (value ? "Registered" : "Not registered"),
+        Cell: ({
+          row: {
+            original: { paid, registered },
+          },
+        }) => (paid ? "Downloaded Question Paper" : registered ? "Registered" : "Not Registered"),
       },
       {
         Header: "Referral",

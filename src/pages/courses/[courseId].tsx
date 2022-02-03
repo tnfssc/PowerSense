@@ -1,22 +1,13 @@
-import { Heading, Box, CircularProgress, Button, useToast } from "@chakra-ui/react";
+import { Heading, Box, CircularProgress, Button, useToast, useBoolean, Link } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
-import { useEffect } from "react";
 
 import { useCourse } from "../../use/courses";
 import usePhones from "../../use/phones";
 import ERRORS from "../../constants/errors";
 
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
-  useEffect(() => {
-    fetch(`/api/courses/is-registered`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ course_id: courseId }),
-    });
-  }, [courseId]);
   const { course, register } = useCourse(courseId);
+  const [loading, setLoading] = useBoolean(false);
   const toast = useToast();
   const { phone } = usePhones();
   const [, setLocation] = useLocation();
@@ -46,12 +37,46 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
   };
 
   const handleDownloadQuestionPaper = async () => {
-    window.open(course.data!.payment_link!, "_blank", "noopener noreferrer");
-    return toast({
-      title: "Coming soon",
-      status: "info",
-      position: "bottom-left",
-    });
+    if (course.data?.paid) {
+      return toast({
+        title: "Coming soon",
+        status: "info",
+        position: "bottom-left",
+      });
+    }
+    setLoading.on();
+    try {
+      const res = await fetch("/api/courses/pay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          course_id: courseId,
+        }),
+      });
+      const body = await res.json();
+      setLoading.off();
+      if (res.status !== 200) {
+        console.error({ res, body });
+        throw new Error();
+      }
+      return toast({
+        title: "Please click the link below to pay",
+        description: <Link href={body.payment_link}>{body.payment_link}</Link>,
+        position: "bottom-left",
+        duration: null,
+        isClosable: true,
+        status: "info",
+      });
+    } catch (error) {
+      setLoading.off();
+      return toast({
+        title: "Some error occurred",
+        status: "error",
+        position: "bottom-left",
+      });
+    }
   };
 
   return (
@@ -80,9 +105,9 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
               disabled={!course.data!.payment_link}
               w="full"
               onClick={handleDownloadQuestionPaper}
-              isLoading={register.isLoading}
+              isLoading={register.isLoading || loading}
             >
-              Download Question Paper
+              {course.data?.paid ? "Download Question Paper" : "Pay to Download the Question Paper"}
             </Button>
           )}
         </Box>

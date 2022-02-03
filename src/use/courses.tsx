@@ -12,9 +12,9 @@ export type CoursesType = {
   payment_link: string | null;
 };
 
-export type CourseRegistrationsType = { user_id: string; course_id: number };
+export type CourseRegistrationsType = { user_id: string; course_id: number; paid: boolean };
 
-export type CourseType = CoursesType & { registered: boolean };
+export type CourseType = CoursesType & { registered: boolean; paid: boolean };
 
 export const useCourse = (id: number) => {
   const course = useQuery<CourseType, PostgrestError>(
@@ -28,7 +28,7 @@ export const useCourse = (id: number) => {
         .single();
       if (error || (registered.error && registered.error.details !== ERRORS.SINGLE_ROW_NOT_FOUND.details))
         throw error || registered.error;
-      const result = { ...data!, registered: !!registered.data };
+      const result = { ...data!, registered: !!registered.data, paid: registered.data!.paid || false };
       return result;
     },
     {
@@ -63,7 +63,10 @@ export const useCourse = (id: number) => {
   return { course, register: mutation };
 };
 
-export type CoursesList = Omit<Omit<Omit<CoursesType, "description">, "question_paper">, "payment_link"> & { registered: boolean };
+export type CoursesList = Omit<Omit<Omit<CoursesType, "description">, "question_paper">, "payment_link"> & {
+  registered: boolean;
+  paid: boolean;
+};
 
 const useCourses = (all = false) => {
   const courses = useQuery<Array<CoursesList>, PostgrestError>(
@@ -72,11 +75,12 @@ const useCourses = (all = false) => {
       const { data, error } = await supabase.from<Omit<CoursesList, "registered">>("courses").select("id,name");
       const registered = await supabase
         .from<CourseRegistrationsType>("course-registrations")
-        .select("user_id,course_id");
+        .select("user_id,course_id,paid");
       if (error || registered.error) throw error || registered.error;
       const result = data!.map((course) => ({
         ...course,
         registered: registered.data!.some((reg) => reg.course_id === course.id),
+        paid: registered.data!.find((reg) => reg.course_id === course.id)?.paid ?? false,
       }));
       if (all) return result;
       return result.filter((course) => course.registered);

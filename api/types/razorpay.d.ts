@@ -133,6 +133,7 @@ export interface RazorpayPaymentLinkRequest {
   callback_url?: string;
   callback_method?: string;
   reference_id: string;
+  expire_by: number;
 }
 
 export interface Customer {
@@ -152,4 +153,30 @@ export interface Notify {
 
 export interface Reminders {
   status: string;
+}
+
+export interface RazorpayPaymentLinkResponse {
+  accept_partial: boolean;
+  amount: number;
+  amount_paid: number;
+  cancelled_at: number;
+  created_at: number;
+  currency: string;
+  customer: Customer;
+  description: string;
+  expire_by: number;
+  expired_at: number;
+  first_min_partial_amount: number;
+  id: string;
+  notes: null;
+  notify: Notify;
+  payments: null;
+  reference_id: string;
+  reminder_enable: boolean;
+  reminders: never[];
+  short_url: string;
+  status: string;
+  updated_at: number;
+  upi_link: boolean;
+  user_id: string;
 }

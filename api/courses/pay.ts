@@ -1,5 +1,5 @@
 import type { VercelApiHandler } from "@vercel/node";
-import type { RazorpayPaymentLinkRequest } from "../types/razorpay";
+import type { RazorpayPaymentLinkRequest, RazorpayPaymentLinkResponse } from "../types/razorpay";
 import type { Courses } from "../types/supabase/tables";
 
 import supabase from "../../api-utils/supabase";
@@ -28,11 +28,11 @@ const handler: VercelApiHandler = async (req, res) => {
         email: true,
       },
       reference_id: `${user.id}+${course_id}`,
+      expire_by: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 1 week
     };
-    const r = await razorpay.paymentLink.create(params);
-    console.log(JSON.stringify({ razorpayCreatePaymentLinkResponse: r }, null, 2));
-    if (!r.error) return res.status(200).json({ success: true });
-    else return res.status(500).json({ error: r.error });
+    const r = (await razorpay.paymentLink.create(params)) as RazorpayPaymentLinkResponse;
+    if (r) return res.status(200).json({ payment_link: r.short_url });
+    else return res.status(500).json({ error: "Failed to create payment link" });
   } catch (error) {
     return res.status(500).json({ error });
   }

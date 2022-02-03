@@ -28,7 +28,7 @@ export const useCourse = (id: number) => {
         .single();
       if (error || (registered.error && registered.error.details !== ERRORS.SINGLE_ROW_NOT_FOUND.details))
         throw error || registered.error;
-      const result = { ...data!, registered: !!registered.data, paid: registered.data!.paid || false };
+      const result = { ...data!, registered: !!registered.data, paid: registered.data?.paid || false };
       return result;
     },
     {

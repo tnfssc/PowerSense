@@ -2,10 +2,14 @@ import { Heading, Box, CircularProgress, Button, useToast, useBoolean, Link } fr
 import { Redirect, useLocation } from "wouter";
 
 import { useCourse } from "../../use/courses";
+import useAuth from "../../use/auth";
 import usePhones from "../../use/phones";
 import ERRORS from "../../constants/errors";
 
+import { isIITH } from "../../../api-utils/common/iith";
+
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
+  const user = useAuth()!;
   const { course, register } = useCourse(courseId);
   const [loading, setLoading] = useBoolean(false);
   const toast = useToast();
@@ -97,17 +101,18 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
           <Heading size="md">{course.data!.description}</Heading>
           <Box h="4" />
           {!course.data!.registered ? (
-            <Button w="full" onClick={handleRegister} isLoading={register.isLoading}>
+            <Button onClick={handleRegister} isLoading={register.isLoading}>
               Register
             </Button>
           ) : (
             <Button
               disabled={!course.data!.payment_link}
-              w="full"
               onClick={handleDownloadQuestionPaper}
               isLoading={register.isLoading || loading}
             >
-              {course.data?.paid ? "Download Question Paper" : "Pay to Download the Question Paper"}
+              {course.data?.paid
+                ? "Download Question Paper"
+                : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"} to Download the Question Paper`}
             </Button>
           )}
         </Box>

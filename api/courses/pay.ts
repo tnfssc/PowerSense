@@ -5,6 +5,8 @@ import type { Courses } from "../types/supabase/tables";
 import supabase from "../../api-utils/supabase";
 import razorpay from "../../api-utils/razorpay";
 
+import { isIITH } from "../../api-utils/common/iith";
+
 const handler: VercelApiHandler = async (req, res) => {
   const { user, error } = await supabase.auth.api.getUserByCookie(req);
   if (error || !user) return res.status(401).json({ error });
@@ -14,7 +16,7 @@ const handler: VercelApiHandler = async (req, res) => {
   if (error2) return res.status(500).json({ error: error2 });
   try {
     const params: RazorpayPaymentLinkRequest = {
-      amount: 100,
+      amount: isIITH(user) ? 100 : 10000,
       currency: "INR",
       description: `${course_name} payment`,
       customer: {

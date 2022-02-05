@@ -1,4 +1,4 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Button, Box } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, Box, Button } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { Column, useTable } from "react-table";
 
@@ -12,7 +12,13 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
       {
         Header: "Course name",
         accessor: "name",
-        Cell: ({ row }) => <Link href={`/courses/${row.original.id}`}>{row.original.name}</Link>,
+        Cell: ({ row }) => (
+          <Link href={`/courses/${row.original.id}`}>
+            <Button variant="ghost" bg="#DDD" color="black">
+              {row.original.name}
+            </Button>
+          </Link>
+        ),
       },
       {
         Header: "Status",
@@ -24,21 +30,8 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
         }) => (paid ? "Downloaded Question Paper" : registered ? "Registered" : "Not Registered"),
       },
       {
-        Header: "Referral",
-        Cell: "45-62-66-77 (active)",
-      },
-      {
         Header: "Deadline",
         Cell: "N/A",
-      },
-      {
-        Header: "Question Paper",
-        accessor: "id",
-        Cell: ({ row }) => (
-          <Link href={`/courses/${row.original.id}`}>
-            <Button disabled={!row.original.registered}>{row.original.registered ? "Download" : "Register"}</Button>
-          </Link>
-        ),
       },
     ],
     [],

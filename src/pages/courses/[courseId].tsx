@@ -1,4 +1,4 @@
-import { Heading, Box, CircularProgress, Button, useToast, useBoolean, Link } from "@chakra-ui/react";
+import { Heading, Box, CircularProgress, Button, useToast, useBoolean, Link, Flex } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
 
 import { useCourse } from "../../use/courses";
@@ -97,7 +97,10 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
       ) : (
         <Box>
           <Box h="10" />
-          <Heading size="lg">{course.data!.name}</Heading>
+          <Flex justifyContent="space-between">
+            <Heading size="lg">{course.data!.name}</Heading>
+            <p>Referral code: 45-34-RD-22 (active)</p>
+          </Flex>
           <Heading size="md">{course.data!.description}</Heading>
           <Box h="4" />
           {!course.data!.registered ? (

@@ -1,24 +1,55 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Box, Button } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Box,
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverTrigger,
+  CircularProgress,
+} from "@chakra-ui/react";
 import { useMemo } from "react";
-import { Column, useTable } from "react-table";
+import { Column, useTable, Row, TableRowProps, CellProps } from "react-table";
 
-import { CoursesList } from "../../../use/courses";
+import { CoursesList, useCourse } from "../../../use/courses";
 import Link from "../../../components/Link";
 
+const ButtonCell: React.FC<CellProps<CoursesList, string>> = ({ row }) => {
+  const {
+    course: { data, isLoading },
+  } = useCourse(row.original.id);
+  return (
+    <Popover trigger="hover" isLazy>
+      <PopoverTrigger>
+        <Button variant="ghost">
+          <Link href={`/courses/${row.original.id}`}>{row.original.name}</Link>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverHeader fontWeight="semibold">{row.original.name}</PopoverHeader>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverBody>{isLoading || !data ? <CircularProgress isIndeterminate /> : data.description}</PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) => {
-  console.log(courses);
   const columns = useMemo<Column<CoursesList>[]>(
     () => [
       {
         Header: "Course name",
         accessor: "name",
-        Cell: ({ row }) => (
-          <Link href={`/courses/${row.original.id}`}>
-            <Button variant="ghost" bg="#DDD" color="black">
-              {row.original.name}
-            </Button>
-          </Link>
-        ),
+        Cell: ButtonCell,
       },
       {
         Header: "Status",
@@ -54,15 +85,8 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
         <Tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <Tr {...row.getRowProps()} _hover={{ bgColor: "rgba(255, 255, 255, 5)", color: "black" }}>
-                {row.cells.map((cell) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
-                ))}
-              </Tr>
-            );
+            const { key, ...rowProps } = row.getRowProps();
+            return <TableRow row={row} rowProps={rowProps} key={key} />;
           })}
         </Tbody>
       </Table>
@@ -71,3 +95,18 @@ const CoursesTable: React.FC<{ courses: Array<CoursesList> }> = ({ courses }) =>
 };
 
 export default CoursesTable;
+
+const TableRow: React.FC<{ row: Row<CoursesList>; rowProps: Omit<TableRowProps, "key"> }> = ({ row, rowProps }) => {
+  return (
+    <Tr {...rowProps}>
+      {row.cells.map((cell) => {
+        const { key, ...cellProps } = cell.getCellProps();
+        return (
+          <Td {...cellProps} key={key}>
+            {cell.render("Cell")}
+          </Td>
+        );
+      })}
+    </Tr>
+  );
+};

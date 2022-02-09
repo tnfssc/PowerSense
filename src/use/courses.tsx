@@ -18,7 +18,7 @@ export type CourseType = CoursesType & { registered: boolean; paid: boolean };
 
 export const useCourse = (id: number) => {
   const course = useQuery<CourseType, PostgrestError>(
-    "course",
+    `course-${id}`,
     async () => {
       const { data, error } = await supabase.from<CourseType>("courses").select("*").eq("id", id).single();
       const registered = await supabase
@@ -57,7 +57,7 @@ export const useCourse = (id: number) => {
       return result;
     },
     {
-      onSuccess: () => queryClient.invalidateQueries<CoursesType>("course"),
+      onSuccess: () => queryClient.invalidateQueries<CoursesType>(`course-${id}`),
     },
   );
   return { course, register: mutation };

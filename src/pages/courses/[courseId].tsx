@@ -42,11 +42,30 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
 
   const handleDownloadQuestionPaper = async () => {
     if (course.data?.paid) {
-      return toast({
-        title: "Coming soon",
-        status: "info",
-        position: "bottom-left",
+      setLoading.on();
+      const res = await fetch("/api/courses/questionpaper/download", {
+        method: "POST",
+        headers: new Headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ course_id: courseId }),
       });
+      setLoading.off();
+      if (res.status === 404)
+        return toast({
+          title: "Coming soon",
+          status: "info",
+          position: "bottom-left",
+        });
+      if (res.status === 200) {
+        const question_paper = (await res.json()).question_paper as string;
+        window.open(question_paper, "_blank", "noopener noreferrer");
+      } else {
+        return toast({
+          title: "Couldn't download",
+          status: "error",
+          position: "bottom-left",
+        });
+      }
+      return;
     }
     setLoading.on();
     try {
@@ -99,7 +118,7 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
           <Box h="10" />
           <Flex justifyContent="space-between">
             <Heading size="lg">{course.data!.name}</Heading>
-            <p>Referral code: 45-34-RD-22 (active)</p>
+            {/* <p>Referral code: 45-34-RD-22 (active)</p> */}
           </Flex>
           <Heading size="md">{course.data!.description}</Heading>
           <Box h="4" />
@@ -114,7 +133,13 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
               isLoading={register.isLoading || loading}
             >
               {course.data?.paid
-                ? "Download Question Paper"
+                ? `Download Question Paper. ${
+                    course.data.question_paper_downloaded_at
+                      ? `First downloaded on ${new Date(course.data.question_paper_downloaded_at).toLocaleString(
+                          "en-IN",
+                        )}`
+                      : ""
+                  }`
                 : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"} to Download the Question Paper`}
             </Button>
           )}

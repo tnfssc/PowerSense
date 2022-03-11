@@ -1,16 +1,18 @@
 import { Heading, Box, CircularProgress, Button, useToast, useBoolean, Link, Flex } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
+import { useQueryClient } from "react-query";
 
-import { useCourse } from "../../use/courses";
-import useAuth from "../../use/auth";
-import usePhones from "../../use/phones";
-import ERRORS from "../../constants/errors";
+import { useCourse } from "../../../use/courses";
+import useAuth from "../../../use/auth";
+import usePhones from "../../../use/phones";
+import ERRORS from "../../../constants/errors";
 
-import { isIITH } from "../../../api-utils/common/iith";
+import { isIITH } from "../../../../api-utils/common/iith";
 
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
   const user = useAuth()!;
   const { course, register } = useCourse(courseId);
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useBoolean(false);
   const toast = useToast();
   const { phone } = usePhones();
@@ -49,6 +51,7 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
         body: JSON.stringify({ course_id: courseId }),
       });
       setLoading.off();
+      queryClient.invalidateQueries(`course-${courseId}`);
       if (res.status === 404)
         return toast({
           title: "Coming soon",
@@ -127,23 +130,23 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
               Register
             </Button>
           ) : (
-            <Button
-              disabled={!course.data!.payment_link}
-              onClick={handleDownloadQuestionPaper}
-              isLoading={register.isLoading || loading}
-            >
-              {course.data?.paid
-                ? `Download Question Paper. ${
-                    course.data.question_paper_downloaded_at
-                      ? `First downloaded on ${new Date(course.data.question_paper_downloaded_at).toLocaleString(
-                          "en-IN",
-                        )}`
-                      : ""
-                  }`
-                : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"} to Download the Question Paper`}
-            </Button>
+            <>
+              <Button onClick={handleDownloadQuestionPaper} isLoading={register.isLoading || loading}>
+                {course.data?.paid ? `Download Question Paper` : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"}`}
+              </Button>
+              <p>
+                {course.data?.question_paper_downloaded_at
+                  ? `First downloaded on ${new Date(course.data.question_paper_downloaded_at).toLocaleString("en-IN")}`
+                  : ""}
+              </p>
+            </>
           )}
         </Box>
+      )}
+      {course.data?.question_paper_downloaded_at && (
+        <Link href={`/courses/${courseId}/submit`}>
+          <Button>Submit Solution</Button>
+        </Link>
       )}
     </Box>
   );

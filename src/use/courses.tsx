@@ -4,26 +4,24 @@ import { PostgrestError } from "@supabase/supabase-js";
 import supabase from "../lib/supabase";
 import ERRORS from "../constants/errors";
 
+import { SolutionFile } from "../../api/types/questionpapers/solutions.d";
+
 export type CoursesType = {
   id: number;
   name: string;
   description: string;
-  question_paper: string | null;
-  payment_link: string | null;
 };
 
 export type CourseRegistrationsType = {
   user_id: string;
   course_id: number;
   paid: boolean;
-  question_paper_link: string | null;
   question_paper_downloaded_at: string | null;
 };
 
 export type CourseType = CoursesType & {
   registered: boolean;
   paid: boolean;
-  question_paper_link: string | null;
   question_paper_downloaded_at: string | null;
 };
 
@@ -43,7 +41,6 @@ export const useCourse = (id: number) => {
         ...data!,
         registered: !!registered.data,
         paid: registered.data?.paid || false,
-        question_paper_link: registered.data?.question_paper_link ?? null,
         question_paper_downloaded_at: registered.data?.question_paper_downloaded_at ?? null,
       };
       return result;
@@ -80,7 +77,7 @@ export const useCourse = (id: number) => {
   return { course, register: mutation };
 };
 
-export type CoursesList = Omit<Omit<Omit<CoursesType, "description">, "question_paper">, "payment_link"> & {
+export type CoursesList = Omit<CoursesType, "description"> & {
   registered: boolean;
   paid: boolean;
 };
@@ -107,6 +104,28 @@ const useCourses = (all = false) => {
     },
   );
   return courses;
+};
+
+export const useKey = (id: number) => {
+  const key = useQuery<SolutionFile, PostgrestError>(
+    `course-key-${id}`,
+    async () => {
+      const res = await fetch("/api/courses/questionpaper/key", {
+        method: "POST",
+        headers: new Headers({ "Content-Type": "application/json" }),
+        credentials: "same-origin",
+        body: JSON.stringify({ course_id: id }),
+      });
+      if (res.status !== 200) throw new Error("Error");
+      const { data } = (await res.json()) as { data: SolutionFile };
+      return data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  );
+  return key;
 };
 
 export default useCourses;

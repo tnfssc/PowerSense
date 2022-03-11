@@ -1,9 +1,11 @@
+import { Paper } from "../questionpapers/solutions.d";
 export interface CourseRegistrations {
   user_id: string;
   course_id: number;
   registered_at: number;
   paid: boolean;
   question_paper_downloaded_at: Date | null;
+  answers: Paper;
 }
 
 export interface Courses {

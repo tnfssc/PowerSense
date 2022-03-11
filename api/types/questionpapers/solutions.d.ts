@@ -1,6 +1,6 @@
 type Value = {
   name: string;
-  value: number;
+  value: string;
   units: string;
 };
 type Soln = {

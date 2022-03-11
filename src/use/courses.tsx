@@ -4,7 +4,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import supabase from "../lib/supabase";
 import ERRORS from "../constants/errors";
 
-import { SolutionFile } from "../../api/types/questionpapers/solutions.d";
+import { SolutionFile, Paper } from "../../api/types/questionpapers/solutions.d";
 
 export type CoursesType = {
   id: number;
@@ -17,12 +17,14 @@ export type CourseRegistrationsType = {
   course_id: number;
   paid: boolean;
   question_paper_downloaded_at: string | null;
+  answers: Paper | null;
 };
 
 export type CourseType = CoursesType & {
   registered: boolean;
   paid: boolean;
   question_paper_downloaded_at: string | null;
+  answers: Paper | null;
 };
 
 export const useCourse = (id: number) => {
@@ -42,6 +44,7 @@ export const useCourse = (id: number) => {
         registered: !!registered.data,
         paid: registered.data?.paid || false,
         question_paper_downloaded_at: registered.data?.question_paper_downloaded_at ?? null,
+        answers: registered.data?.answers ?? null,
       };
       return result;
     },

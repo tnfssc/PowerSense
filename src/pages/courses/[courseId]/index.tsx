@@ -1,4 +1,4 @@
-import { Heading, Box, CircularProgress, Button, useToast, useBoolean, Link, Flex } from "@chakra-ui/react";
+import { chakra, Heading, Box, CircularProgress, Button, useToast, useBoolean, Link, Flex } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
 import { useQueryClient } from "react-query";
 
@@ -120,10 +120,9 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
         <Box>
           <Box h="10" />
           <Flex justifyContent="space-between">
-            <Heading size="lg">{course.data!.name}</Heading>
-            {/* <p>Referral code: 45-34-RD-22 (active)</p> */}
+            <Heading size="md">{course.data!.name}</Heading>
           </Flex>
-          <Heading size="md">{course.data!.description}</Heading>
+          <chakra.p>{course.data!.description}</chakra.p>
           <Box h="4" />
           {!course.data!.registered ? (
             <Button onClick={handleRegister} isLoading={register.isLoading}>
@@ -131,18 +130,19 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
             </Button>
           ) : (
             <>
-              <Button onClick={handleDownloadQuestionPaper} isLoading={register.isLoading || loading}>
-                {course.data?.paid ? `Download Question Paper` : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"}`}
-              </Button>
-              <p>
+              <chakra.p>
                 {course.data?.question_paper_downloaded_at
                   ? `First downloaded on ${new Date(course.data.question_paper_downloaded_at).toLocaleString("en-IN")}`
                   : ""}
-              </p>
+              </chakra.p>
+              <Button onClick={handleDownloadQuestionPaper} isLoading={register.isLoading || loading}>
+                {course.data?.paid ? `Download Question Paper` : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"}`}
+              </Button>
             </>
           )}
         </Box>
       )}
+      <Box h="4" />
       {course.data?.question_paper_downloaded_at && (
         <Link href={`/courses/${courseId}/submit`}>
           <Button>Submit Solution</Button>

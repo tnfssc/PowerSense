@@ -61,11 +61,11 @@ export default function SubmitSoln({ courseId }: { courseId: number }) {
     <Flex flexDir="column" w="100%" alignItems="center">
       <Heading>Code: {questionPaperCode}</Heading>
       {answers.map((answer, index) => (
-        <Flex key={index} flexDir="column">
-          <Heading size="sm">Question: {index + 1}</Heading>
+        <Flex key={index} flexDir="column" mb="4">
+          <Heading size="sm" mb="2">Question: {index + 1}</Heading>
           <Flex flexDir="column">
             {answer.solutions.map((solution, _index) => (
-              <InputGroup key={_index}>
+              <InputGroup key={_index} mb="2">
                 <InputLeftAddon>{solution.name}</InputLeftAddon>
                 <Input
                   placeholder="Value"

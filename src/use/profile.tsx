@@ -12,7 +12,6 @@ export type ProfileType = {
   organization: string;
   department: string;
   rollNumber: string;
-  upiId: string;
 };
 
 const useProfile = (id?: string) => {
@@ -30,8 +29,6 @@ const useProfile = (id?: string) => {
           organization: "",
           department: "",
           rollNumber: "",
-          phone: "",
-          upiId: "",
         }
       );
     },

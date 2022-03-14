@@ -6,6 +6,7 @@ export interface CourseRegistrations {
   paid: boolean;
   question_paper_downloaded_at: Date | null;
   answers: Paper;
+  key: string;
 }
 
 export interface Courses {

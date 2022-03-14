@@ -7,14 +7,6 @@ const handler: VercelApiHandler = async (req, res) => {
   if (error || !user) return res.status(401).json({ error });
   const course_id = req.body.course_id as number;
   try {
-    const {
-      data: { question_paper_downloaded_at },
-    } = await supabase
-      .from<CourseRegistrations>("course-registrations")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("course_id", course_id)
-      .single();
     let { signedURL, error } = await supabase.storage
       .from("questionpapers")
       .createSignedUrl(`${user.id}/${course_id}/questionpaper.pdf`, 60 * 60);
@@ -25,10 +17,17 @@ const handler: VercelApiHandler = async (req, res) => {
       const { error: moveError1 } = await supabase.storage
         .from("questionpapers")
         .move(`unused/${list[0].name}`, `${user.id}/${course_id}/questionpaper.pdf`);
-      const { error: moveError2 } = await supabase.storage
-        .from("questionpapers")
-        .move(`unused/${`key_${list[0].name.split("_")[1].split(".")[0]}.json`}`, `${user.id}/${course_id}/key.json`);
-      if (moveError1 || moveError2) return res.status(500).json({ error: { moveError1, moveError2 } });
+      const { error: updateError } = await supabase
+        .from<CourseRegistrations>("course-registrations")
+        .update({ key: list[0].name.split("_")[1].split(".")[0] })
+        .eq("user_id", user.id)
+        .eq("course_id", course_id)
+        .single();
+      // const { error: moveError2 } = await supabase.storage
+      //   .from("questionpapers")
+      //   .move(`unused/${`key_${list[0].name.split("_")[1].split(".")[0]}.json`}`, `${user.id}/${course_id}/key.json`);
+      // if (moveError1 || moveError2) return res.status(500).json({ error: { moveError1, moveError2 } });
+      if (moveError1 || updateError) return res.status(500).json({ error: { moveError1, updateError } });
       const { signedURL: _signedURL, error: _error } = await supabase.storage
         .from("questionpapers")
         .createSignedUrl(`${user.id}/${course_id}/questionpaper.pdf`, 60 * 60);
@@ -38,7 +37,13 @@ const handler: VercelApiHandler = async (req, res) => {
     if (!signedURL) {
       return res.status(404).json({ error });
     }
-    if (question_paper_downloaded_at) {
+    const { data } = await supabase
+      .from<CourseRegistrations>("course-registrations")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("course_id", course_id)
+      .single();
+    if (data?.question_paper_downloaded_at) {
       return res.status(200).json({ question_paper: signedURL });
     }
     const r = await supabase

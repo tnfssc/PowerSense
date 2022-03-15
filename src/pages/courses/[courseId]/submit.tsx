@@ -4,16 +4,15 @@ import {
   ButtonGroup,
   CircularProgress,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
+  RadioGroup,
+  Radio,
   useToast,
+  HStack,
 } from "@chakra-ui/react";
 
 import { useKey, useCourse } from "../../../use/courses";
 import { useState, useEffect } from "react";
-import { Paper } from "../../../../api/types/questionpapers/solutions.d";
+import { MCA } from "../../../../api/types/questionpapers/solutions.d";
 
 export default function SubmitSoln({ courseId }: { courseId: number }) {
   const { data, error, isFetching } = useKey(courseId);
@@ -21,7 +20,7 @@ export default function SubmitSoln({ courseId }: { courseId: number }) {
   const {
     course: { data: course },
   } = useCourse(courseId);
-  const [answers, setAnswers] = useState<Paper>([]);
+  const [answers, setAnswers] = useState<Array<MCA>>([]);
   useEffect(() => {
     if (data && course?.answers !== undefined) {
       const [, questions] = Object.entries(data)[0];
@@ -59,11 +58,29 @@ export default function SubmitSoln({ courseId }: { courseId: number }) {
   };
   return (
     <Flex flexDir="column" w="100%" alignItems="center">
-      <Heading>Code: {questionPaperCode}</Heading>
+      <Heading mb="6">Code: {questionPaperCode}</Heading>
       {answers.map((answer, index) => (
-        <Flex key={index} flexDir="column" mb="4">
-          <Heading size="sm" mb="2">Question: {index + 1}</Heading>
-          <Flex flexDir="column">
+        <Flex key={index} mb="4">
+          <Heading size="sm" mb="2">
+            Question: {index + 1}
+          </Heading>
+          <RadioGroup
+            ml="4"
+            name={`${index}`}
+            value={answer}
+            onChange={(v) => {
+              answers[index] = v as MCA;
+              setAnswers((p) => [...p]);
+            }}
+          >
+            <HStack>
+              <Radio value="a">a</Radio>
+              <Radio value="b">b</Radio>
+              <Radio value="c">c</Radio>
+              <Radio value="d">d</Radio>
+            </HStack>
+          </RadioGroup>
+          {/* <Flex flexDir="column">
             {answer.solutions.map((solution, _index) => (
               <InputGroup key={_index} mb="2">
                 <InputLeftAddon>{solution.name}</InputLeftAddon>
@@ -78,7 +95,7 @@ export default function SubmitSoln({ courseId }: { courseId: number }) {
                 <InputRightAddon>{solution.units}</InputRightAddon>
               </InputGroup>
             ))}
-          </Flex>
+          </Flex> */}
         </Flex>
       ))}
       <ButtonGroup>

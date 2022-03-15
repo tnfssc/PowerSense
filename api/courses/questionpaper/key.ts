@@ -16,7 +16,7 @@ const handler: VercelApiHandler = async (req, res) => {
   const code = data.key;
   try {
     let { data, error } = await supabase.storage.from("questionpapers").download(`${user.id}/${course_id}/key.json`);
-    if (error.message === "The resource was not found") {
+    if (error?.message === "The resource was not found") {
       const { error: moveError } = await supabase.storage
         .from("questionpapers")
         .move(`unused/key_${code}.json`, `${user.id}/${course_id}/key.json`);

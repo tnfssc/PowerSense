@@ -1,5 +1,5 @@
 import { chakra, Heading, Box, CircularProgress, Button, useToast, useBoolean, Flex } from "@chakra-ui/react";
-import { Redirect, useLocation } from "wouter";
+import { Redirect, useLocation, Link } from "wouter";
 import { useQueryClient } from "react-query";
 
 import { useCourse } from "../../../use/courses";
@@ -156,12 +156,12 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
           )}
         </Box>
       )}
-      {/* <Box h="4" />
+      <Box h="4" />
       {course.data?.question_paper_downloaded_at && (
         <Link href={`/courses/${courseId}/submit`}>
           <Button>Submit Solution</Button>
         </Link>
-      )} */}
+      )}
     </Box>
   );
 };

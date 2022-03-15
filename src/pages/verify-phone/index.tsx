@@ -1,4 +1,4 @@
-import { Flex, Input, Button, Box, useToast } from "@chakra-ui/react";
+import { Flex, Input, Button, Box, useToast, FormLabel } from "@chakra-ui/react";
 import { useState } from "react";
 
 import usePhones from "../../use/phones";
@@ -10,7 +10,7 @@ export default function VerifyPhone() {
     phone: { data, error },
     invalidate,
   } = usePhones(user.id);
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+91");
   const [askCode, setAskCode] = useState(false);
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +72,8 @@ export default function VerifyPhone() {
     <Flex flexDir="column" w="100%" alignItems="center">
       {!error && data ? `Your phone number is ${data.phone}. Change it using the form below` : <></>}
       <Box h="10" />
-      <Flex w="full">
+      <Flex w="full" alignItems="center">
+        <FormLabel>Phone&nbsp;number:</FormLabel>
         <Input
           disabled={askCode || isLoading}
           placeholder="Phone number with country code"

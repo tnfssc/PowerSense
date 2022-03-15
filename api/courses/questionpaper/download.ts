@@ -23,10 +23,10 @@ const handler: VercelApiHandler = async (req, res) => {
         .eq("user_id", user.id)
         .eq("course_id", course_id)
         .single();
-      // const { error: moveError2 } = await supabase.storage
-      //   .from("questionpapers")
-      //   .move(`unused/${`key_${list[0].name.split("_")[1].split(".")[0]}.json`}`, `${user.id}/${course_id}/key.json`);
-      // if (moveError1 || moveError2) return res.status(500).json({ error: { moveError1, moveError2 } });
+      const { error: moveError2 } = await supabase.storage
+        .from("questionpapers")
+        .move(`unused/${`key_${list[0].name.split("_")[1].split(".")[0]}.json`}`, `${user.id}/${course_id}/key.json`);
+      if (moveError1 || moveError2) return res.status(500).json({ error: { moveError1, moveError2 } });
       if (moveError1 || updateError) return res.status(500).json({ error: { moveError1, updateError } });
       const { signedURL: _signedURL, error: _error } = await supabase.storage
         .from("questionpapers")

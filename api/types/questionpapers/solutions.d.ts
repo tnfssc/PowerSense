@@ -10,3 +10,5 @@ type Soln = {
 };
 type Paper = Array<Soln>;
 export type SolutionFile = Record<string, Paper>;
+type MCA = "a" | "b" | "c" | "d";
+export type MCASolnFile = Record<string, Array<MCA>>;

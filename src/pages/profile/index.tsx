@@ -59,9 +59,11 @@ export default function Profile() {
             {phone.data?.phone ?? "Link phone"}
           </Button>
         </Link>
-        <Link href="/login/reset-password">
-          <Button>Reset Password</Button>
-        </Link>
+        {user.app_metadata.provider === "email" && (
+          <Link href="/login/reset-password">
+            <Button>Reset Password</Button>
+          </Link>
+        )}
       </Flex>
       <Formik initialValues={profile!} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ handleSubmit }) => (

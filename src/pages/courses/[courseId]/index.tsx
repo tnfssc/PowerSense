@@ -1,16 +1,16 @@
-import { chakra, Heading, Box, CircularProgress, Button, useToast, useBoolean, Link, Flex } from "@chakra-ui/react";
+import { chakra, Heading, Box, CircularProgress, Button, useToast, useBoolean, Flex } from "@chakra-ui/react";
 import { Redirect, useLocation } from "wouter";
 import { useQueryClient } from "react-query";
 
 import { useCourse } from "../../../use/courses";
-import useAuth from "../../../use/auth";
+// import useAuth from "../../../use/auth";
 import usePhones from "../../../use/phones";
 import ERRORS from "../../../constants/errors";
 
-import { isIITH } from "../../../../api-utils/common/iith";
+// import { isIITH } from "../../../../api-utils/common/iith";
 
 const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
-  const user = useAuth()!;
+  // const user = useAuth()!;
   const { course, register } = useCourse(courseId);
   const queryClient = useQueryClient();
   const [loading, setLoading] = useBoolean(false);
@@ -43,66 +43,66 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
   };
 
   const handleDownloadQuestionPaper = async () => {
-    if (course.data?.paid) {
-      setLoading.on();
-      const res = await fetch("/api/courses/questionpaper/download", {
-        method: "POST",
-        headers: new Headers({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ course_id: courseId }),
-      });
-      setLoading.off();
-      queryClient.invalidateQueries(`course-${courseId}`);
-      if (res.status === 404)
-        return toast({
-          title: "Coming soon",
-          status: "info",
-          position: "bottom-left",
-        });
-      if (res.status === 200) {
-        const question_paper = (await res.json()).question_paper as string;
-        window.open(question_paper, "_blank", "noopener noreferrer");
-      } else {
-        return toast({
-          title: "Couldn't download",
-          status: "error",
-          position: "bottom-left",
-        });
-      }
-      return;
-    }
+    // if (course.data?.paid) {
     setLoading.on();
-    try {
-      const res = await fetch("/api/courses/pay", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          course_id: courseId,
-        }),
-      });
-      const body = await res.json();
-      setLoading.off();
-      if (res.status !== 200) {
-        console.error({ res, body });
-        throw new Error();
-      }
+    const res = await fetch("/api/courses/questionpaper/download", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ course_id: courseId }),
+    });
+    setLoading.off();
+    queryClient.invalidateQueries(`course-${courseId}`);
+    if (res.status === 404)
       return toast({
-        title: "Please click the link below to pay",
-        description: <Link href={body.payment_link}>{body.payment_link}</Link>,
-        position: "bottom-left",
-        duration: null,
-        isClosable: true,
+        title: "Coming soon",
         status: "info",
+        position: "bottom-left",
       });
-    } catch (error) {
-      setLoading.off();
+    if (res.status === 200) {
+      const question_paper = (await res.json()).question_paper as string;
+      window.open(question_paper, "_blank", "noopener noreferrer");
+    } else {
       return toast({
-        title: "Some error occurred",
+        title: "Couldn't download",
         status: "error",
         position: "bottom-left",
       });
     }
+    return;
+    // }
+    // setLoading.on();
+    // try {
+    //   const res = await fetch("/api/courses/pay", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       course_id: courseId,
+    //     }),
+    //   });
+    //   const body = await res.json();
+    //   setLoading.off();
+    //   if (res.status !== 200) {
+    //     console.error({ res, body });
+    //     throw new Error();
+    //   }
+    //   return toast({
+    //     title: "Please click the link below to pay",
+    //     description: <Link href={body.payment_link}>{body.payment_link}</Link>,
+    //     position: "bottom-left",
+    //     duration: null,
+    //     isClosable: true,
+    //     status: "info",
+    //   });
+    // } catch (error) {
+    //   setLoading.off();
+    //   return toast({
+    //     title: "Some error occurred",
+    //     status: "error",
+    //     position: "bottom-left",
+    //   });
+    // }
   };
 
   return (
@@ -135,8 +135,11 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
                   ? `First downloaded on ${new Date(course.data.question_paper_downloaded_at).toLocaleString("en-IN")}`
                   : ""}
               </chakra.p>
-              <Button onClick={handleDownloadQuestionPaper} isLoading={register.isLoading || loading}>
+              {/* <Button onClick={handleDownloadQuestionPaper} isLoading={register.isLoading || loading}>
                 {course.data?.paid ? `Download Question Paper` : `Pay Rs.${isIITH(user) ? "1.00" : "100.00"}`}
+              </Button> */}
+              <Button onClick={handleDownloadQuestionPaper} isLoading={register.isLoading || loading}>
+                Download Question Paper
               </Button>
             </>
           )}

@@ -1,4 +1,4 @@
-import { Flex, Heading, Input, useBoolean, Button, useToast } from "@chakra-ui/react";
+import { Flex, Heading, Input, useBoolean, Button, useToast, Link } from "@chakra-ui/react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import * as yup from "yup";
@@ -72,6 +72,7 @@ export default function ForgotPasswordPage() {
       <Button onClick={handleSendResetPasswordLink} mt="4" isLoading={loading}>
         Update Password
       </Button>
+      Made by <Link href="https://github.com/tnfssc">Sharath Chandra</Link>
     </Flex>
   );
 }

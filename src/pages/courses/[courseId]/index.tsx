@@ -60,7 +60,18 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
       });
     if (res.status === 200) {
       const question_paper = (await res.json()).question_paper as string;
-      window.open(question_paper, "_blank", "noopener noreferrer");
+      window.open(question_paper, "_blank", "noreferrer");
+      toast({
+        position: "bottom-left",
+        title: "Download Question Paper",
+        description: (
+          <a href={question_paper} target="_blank" rel="noreferrer">
+            {question_paper}
+          </a>
+        ),
+        isClosable: true,
+        duration: null,
+      });
     } else {
       return toast({
         title: "Couldn't download",

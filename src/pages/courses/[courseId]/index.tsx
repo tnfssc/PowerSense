@@ -65,12 +65,13 @@ const CourseInfo: React.FC<{ courseId: number }> = ({ courseId }) => {
         position: "bottom-left",
         title: "Download Question Paper",
         description: (
-          <a href={question_paper} target="_blank" rel="noreferrer">
-            {question_paper}
-          </a>
+          <Button variant="solid" colorScheme="blue" as="a" href={question_paper} target="_blank" rel="noreferrer">
+            Click here to Download
+          </Button>
         ),
         isClosable: true,
         duration: null,
+        status: "success",
       });
     } else {
       return toast({
